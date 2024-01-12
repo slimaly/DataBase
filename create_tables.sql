@@ -1,60 +1,56 @@
-CREATE TABLE IF NOT EXISTS customers (
+CREATE TABLE Customers (
     customer_id TEXT PRIMARY KEY,
     customer_unique_id INTEGER,
     customer_zip_code_prefix INTEGER,
     customer_city TEXT,
-    customer_state TEXT
+    customer_state TEXT,
+    geolocation_id INTEGER
 );
 
-INSERT INTO customers SELECT * FROM customer_dataset.csv;
-
-
-CREATE TABLE IF NOT EXISTS geolocation (
-    customer_id INTEGER FOREIGN KEY,
-    seller_id INTEGER FOREIGN KEY,
-    state_id INTEGER FOREIGN KEY,
+CREATE TABLE geolocation (
+    geolocation_id INTEGER PRIMARY KEY AUTOINCREMENT,
     geolocation_lat REAL,
     geolocation_lng REAL,
     geolocation_city TEXT,
     geolocation_state TEXT
 );
 
-INSERT INTO geolocation SELECT * FROM geolocation_dataset.csv; 
-
-CREATE TABLE IF NOT EXISTS state_name (
-    state_id INTEGER PRIMARY KEY,
+CREATE TABLE state_name (
+    state INTEGER PRIMARY KEY,
     state_name TEXT
 );
 
-INSERT INTO sate_name SELECT * FROM state_name.csv
-
-CREATE TABLE IF NOT EXISTS review (
+CREATE TABLE review (
     review_id INTEGER PRIMARY KEY,
-    order_id INTEGER FOREIGN KEY,
     review_creation_date TEXT,
     answer_timestamp TEXT,
     review_score INTEGER,
     review_comment_title TEXT,
     review_comment_message TEXT,
-    timestamp_field TEXT
+    timestamp_field TEXT,
+    order_id INTEGER,
+    customer_id TEXT,
+    PRIMARY KEY (order_id, customer_id)
 );
 
-CREATE TABLE IF NOT EXISTS sellers (
+CREATE TABLE sellers (
     seller_id INTEGER PRIMARY KEY,
     seller_zip_code_prefix INTEGER,
     seller_city TEXT,
-    seller_state TEXT
+    seller_state TEXT,
+    geolocation_id INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS payments (
-    order_id INTEGER FOREIGN KEY,
+CREATE TABLE payments (
     payment_sequential INTEGER,
     payment_installements INTEGER,
     payment_type TEXT,
-    payment_value REAL
+    payment_value REAL,
+    order_id INTEGER,
+    PRIMARY KEY (order_id)
 );
 
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE products (
     product_id INTEGER PRIMARY KEY,
     product_category_name TEXT,
     product_description_length INTEGER,
@@ -63,28 +59,33 @@ CREATE TABLE IF NOT EXISTS products (
     product_height_cm INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS orders (
-   order_id INTEGER PRIMARY KEY,
-   customer_id INTEGER FOREIGN KEY,
-   order_delivered_carrier_date TEXT,
-   order_delivered_customer_date TEXT,
-   estimated_delivery_date TEXT,
-   order_status TEXT,
-   order_approved_at TEXT,
-   order_purshace_timestamp TEXT
+CREATE TABLE orders (
+    order_id INTEGER PRIMARY KEY,
+    order_delivered_carrier_date TEXT,
+    order_delivered_customer_date TEXT,
+    estimated_delivery_date TEXT,
+    order_status TEXT,
+    order_approved_at TEXT,
+    order_purshace_timestamp TEXT,
+    customer_id TEXT,
+    PRIMARY KEY (order_id, customer_id)
 );
 
-CREATE TABLE IF NOT EXISTS ProductCategoryNameTranslation (
-    product_id INTEGER PRIMARY KEY,
+CREATE TABLE ProductCategoryNameTranslation (
     product_category_name TEXT,
-    product_category_name_english TEXT
+    product_category_name_english TEXT,
+    product_id INTEGER,
+    PRIMARY KEY (product_id)
 );
 
-CREATE TABLE IF NOT EXISTS OrdersItems (
+CREATE TABLE OrdersItems (
     order_item_id INTEGER PRIMARY KEY,
-    order_id INTEGER FOREIGN KEY,
-    product_id INTEGER FOREIGN KEY,
     shipping_limit_date TEXT,
     freight_value REAL,
-    price REAL
+    price REAL,
+    order_id INTEGER,
+    product_id INTEGER,
+    PRIMARY KEY (order_id, product_id)
 );
+
+
