@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS customers  (
     shipping_limit_date TEXT,
     price FLOAT,
     freight_value FLOAT
-    FOREIGN KEY(order_item_id, product_id, seller_id)
+    FOREIGN KEY(order_item_id, product_id, seller_id) REFERENCES Emplacement(order_item_id, product_id, seller_id)
 );
 --create  order_payments_dataset table
 CREATE TABLE IF NOT EXISTS order_payment (
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS order_payment (
     payment_type TEXT,
     payment_installments INTEGER,
     payment_value FLOAT
+    FOREIGN KEY(order_id) REFERENCES Emplacement(order_id)
 );
 --create order_review_dataset_clean table
 CREATE TABLE IF NOT EXISTS review (
@@ -55,6 +56,7 @@ CREATE TABLE IF NOT EXISTS review (
     review_creation_date TEXT,
     review_answer_timestamp TEXT,
     timestamp_field_7 TEXT
+    FOREIGN KEY(order_id) REFERENCES Emplacement(order_id)
 );
 --create orders_dataset table
 CREATE TABLE IF NOT EXISTS orders (
